@@ -2,10 +2,11 @@ package org.example.monads;
 
 import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
+import org.example.monads.ProcessingError.ErrorType;
 
 public class ChainOfMonads {
 
-    public Either<String, String> processRequest(Request request) {
+    public Either<ProcessingError, String> processRequest(Request request) {
         return validateRequest(request)
                 .flatMap(this::authenticateRequest)
                 .flatMap(this::authorizeRequest)
@@ -27,29 +28,28 @@ Key Benefits in Your Error Handling Chain
 
 
 
-    private Either<String, Request> validateRequest(Request request) {
+    private Either<ProcessingError, Request> validateRequest(Request request) {
         if (request.data() == null || request.data().isEmpty()) {
-            return Either.left("Validation failed: Data is empty");
+            return Either.left(new ProcessingError(ErrorType.VALIDATION, "Data is empty"));
         }
         return Either.right(request);
     }
 
-    private Either<String, Request> authenticateRequest(Request request) {
+    private Either<ProcessingError, Request> authenticateRequest(Request request) {
         if (request.originator() == null || request.originator().isEmpty()) {
-            return Either.left("Authentication failed: Originator is empty");
+            return Either.left(new ProcessingError(ErrorType.AUTHENTICATION, "Originator is empty"));
         }
         return Either.right(request);
     }
 
-    private Either<String, Request> authorizeRequest(Request request) {
+    private Either<ProcessingError, Request> authorizeRequest(Request request) {
         if (request.role() == null || !request.role().equals("admin")) {
-            return Either.left("Authorization failed: User does not have admin role");
+            return Either.left(new ProcessingError(ErrorType.AUTHORIZATION, "User does not have admin role"));
         }
         return Either.right(request);
     }
 
-    private Either<String, String> processBusinessLogic(Request request) {
-        // Simulate some business logic processing
+    private Either<ProcessingError, String> processBusinessLogic(Request request) {     
         try {
             // Simulate some processing that might throw an exception
             if (request.data().contains("error")) {
@@ -57,7 +57,9 @@ Key Benefits in Your Error Handling Chain
             }
             return Either.right("Finally: Successfully processed request for: " + request.originator());
         } catch (Exception e) {
-            return Either.left("Business logic error: " + e.getMessage());
+            return Either.left(new ProcessingError(ErrorType.BUSINESS_LOGIC, e.getMessage()));
         }
     }
+    // map BusinessResponse to ViewDto
+    
 }
