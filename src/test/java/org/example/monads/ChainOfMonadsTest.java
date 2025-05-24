@@ -13,7 +13,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("John Doe", "admin", "valid data");
         
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
         Assertions.assertTrue(result.isRight());
         Assertions.assertEquals("Finally: Successfully processed request for: John Doe", result.get());
@@ -24,7 +24,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("John Doe", "admin", "");
         
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
         Assertions.assertTrue(result.isLeft());
         Assertions.assertEquals(ErrorType.VALIDATION, result.getLeft().type());
@@ -36,7 +36,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("", "admin", "valid data");
         
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
         Assertions.assertTrue(result.isLeft());
         Assertions.assertEquals(ErrorType.AUTHENTICATION, result.getLeft().type());
@@ -48,7 +48,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("John Doe", "user", "valid data");
         
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
         Assertions.assertTrue(result.isLeft());
         Assertions.assertEquals(ErrorType.AUTHORIZATION, result.getLeft().type());
@@ -60,7 +60,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("John Doe", "admin", "data with error");
         
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
         Assertions.assertTrue(result.isLeft());
         Assertions.assertEquals(ErrorType.BUSINESS_LOGIC, result.getLeft().type());
@@ -72,7 +72,7 @@ public class ChainOfMonadsTest {
         ChainOfMonads chainOfMonads = new ChainOfMonads();
         Request request = new Request("John Doe", "not-admin", "data with error");
 
-        Either<ProcessingError, String> result = chainOfMonads.processRequest(request);
+        Either<ProcessingError, String> result = chainOfMonads.processChain(request);
 
         Assertions.assertTrue(result.isLeft());
         Assertions.assertEquals(ErrorType.AUTHORIZATION, result.getLeft().type());

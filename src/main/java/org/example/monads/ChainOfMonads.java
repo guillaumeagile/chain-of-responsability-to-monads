@@ -6,11 +6,49 @@ import org.example.monads.ProcessingError.ErrorType;
 
 public class ChainOfMonads {
 
-    public Either<ProcessingError, String> processRequest(Request request) {
-        return validateRequest(request)
-                .flatMap(this::authenticateRequest)
-                .flatMap(this::authorizeRequest)
-                .flatMap(this::processBusinessLogic);
+
+    public static Either<ProcessingError, Request> validateRequest(Request request) {
+        if (request.data() == null || request.data().isEmpty()) {
+            return Either.left(new ProcessingError(ErrorType.VALIDATION, "Data is empty"));
+        }
+        return Either.right(request);
+    }
+
+    public static Either<ProcessingError, Request> authenticateRequest(Request request) {
+        if (request.originator() == null || request.originator().isEmpty()) {
+            return Either.left(new ProcessingError(ErrorType.AUTHENTICATION, "Originator is empty"));
+        }
+        return Either.right(request);
+    }
+
+    public static Either<ProcessingError, Request> authorizeRequest(Request request) {
+        if (request.role() == null || !request.role().equals("admin")) {
+            return Either.left(new ProcessingError(ErrorType.AUTHORIZATION, "User does not have admin role"));
+        }
+        return Either.right(request);
+    }
+
+    public static Either<ProcessingError, String> processBusinessLogic(Request request) {
+        try {
+            // Simulate some processing that might throw an exception
+            if (request.data().contains("error")) {
+                throw new RuntimeException("Error processing data");
+            }
+            return Either.right("Finally: Successfully processed request for: " + request.originator());
+        } catch (Exception e) {
+            return Either.left(new ProcessingError(ErrorType.BUSINESS_LOGIC, e.getMessage()));
+        }
+    }
+    // map BusinessResponse to ViewDto
+
+
+
+
+    public Either<ProcessingError, String> processChain(Request request) {
+        return ChainOfMonads.validateRequest(request)
+                .flatMap(ChainOfMonads::authenticateRequest)
+                .flatMap(ChainOfMonads::authorizeRequest)
+                .flatMap(ChainOfMonads::processBusinessLogic);
     }
     /*
 What flatMap Does
@@ -28,38 +66,4 @@ Key Benefits in Your Error Handling Chain
 
 
 
-    private Either<ProcessingError, Request> validateRequest(Request request) {
-        if (request.data() == null || request.data().isEmpty()) {
-            return Either.left(new ProcessingError(ErrorType.VALIDATION, "Data is empty"));
-        }
-        return Either.right(request);
-    }
-
-    private Either<ProcessingError, Request> authenticateRequest(Request request) {
-        if (request.originator() == null || request.originator().isEmpty()) {
-            return Either.left(new ProcessingError(ErrorType.AUTHENTICATION, "Originator is empty"));
-        }
-        return Either.right(request);
-    }
-
-    private Either<ProcessingError, Request> authorizeRequest(Request request) {
-        if (request.role() == null || !request.role().equals("admin")) {
-            return Either.left(new ProcessingError(ErrorType.AUTHORIZATION, "User does not have admin role"));
-        }
-        return Either.right(request);
-    }
-
-    private Either<ProcessingError, String> processBusinessLogic(Request request) {     
-        try {
-            // Simulate some processing that might throw an exception
-            if (request.data().contains("error")) {
-                throw new RuntimeException("Error processing data");
-            }
-            return Either.right("Finally: Successfully processed request for: " + request.originator());
-        } catch (Exception e) {
-            return Either.left(new ProcessingError(ErrorType.BUSINESS_LOGIC, e.getMessage()));
-        }
-    }
-    // map BusinessResponse to ViewDto
-    
 }
