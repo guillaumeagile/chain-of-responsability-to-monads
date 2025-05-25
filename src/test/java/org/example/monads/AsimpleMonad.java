@@ -1,6 +1,5 @@
 package org.example.monads;
 
-import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

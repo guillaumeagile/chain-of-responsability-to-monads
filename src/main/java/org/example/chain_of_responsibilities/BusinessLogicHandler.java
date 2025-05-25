@@ -1,13 +1,9 @@
 package org.example.chain_of_responsibilities;
 
-public class BusinessLogicHandler implements RequestHandler {
-    @Override
-    public void setNext(RequestHandler nextHandler) {
-
-    }
+public class BusinessLogicHandler extends BaseRequestHandler{
 
     @Override
     public String handleRequest(Request request) {
-        return "";
+        return ", logic: Ok"  + handleNextRequest(request);
     }
 }

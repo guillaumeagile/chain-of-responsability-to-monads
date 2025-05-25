@@ -14,6 +14,6 @@ public class FullChainTest {
         var result = processor.processRequest(request);
         // You might want to add assertions here
          Assertions.assertNotNull(result);
-         Assertions.assertEquals("originator: Ok, role: Ok, validation: Ok, logic: Ok", result);
+         Assertions.assertEquals("originator: Ok, authorization: Ok, validation: Ok, logic: Ok", result);
     }
 }
