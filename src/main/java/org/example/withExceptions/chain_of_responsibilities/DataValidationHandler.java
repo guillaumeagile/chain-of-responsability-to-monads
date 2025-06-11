@@ -1,7 +1,7 @@
 package org.example.withExceptions.chain_of_responsibilities;
 
 import org.example.chain_of_responsibilities.Request;
-import org.example.monads.ProcessingError;
+import org.example.monads.vavr.ProcessingError;
 
 public class DataValidationHandler implements RequestHandler {
     private RequestHandler nextHandler;

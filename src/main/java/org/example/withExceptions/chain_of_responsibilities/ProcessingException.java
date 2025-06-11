@@ -1,6 +1,6 @@
 package org.example.withExceptions.chain_of_responsibilities;
 
-import org.example.monads.ProcessingError;
+import org.example.monads.vavr.ProcessingError;
 
 public class ProcessingException extends Throwable {
 

@@ -1,4 +1,4 @@
-package org.example.monads;
+package org.example.monads.vavr;
 
 import org.example.chain_of_responsibilities.Request;
 import org.junit.jupiter.api.Assertions;

@@ -1,12 +1,12 @@
-package org.example.monads;
+package org.example.monads.vavr;
 
 import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
-import org.example.monads.ProcessingError.ErrorType;
+import org.example.monads.vavr.ProcessingError.ErrorType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class ChainOfMonadsTest {
+public class ChainOfMonadsOneRequestTest {
 
     @Test
     public void testSuccessfulRequest() {

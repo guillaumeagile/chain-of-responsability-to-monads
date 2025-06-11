@@ -1,4 +1,4 @@
-package org.example.monads;
+package org.example.monads.vavr;
 
 
 public record ProcessingError(ErrorType type, String message) {

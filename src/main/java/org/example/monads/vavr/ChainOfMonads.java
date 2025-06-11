@@ -1,8 +1,8 @@
-package org.example.monads;
+package org.example.monads.vavr;
 
 import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
-import org.example.monads.ProcessingError.ErrorType;
+import org.example.monads.vavr.ProcessingError.ErrorType;
 
 public class ChainOfMonads {
 

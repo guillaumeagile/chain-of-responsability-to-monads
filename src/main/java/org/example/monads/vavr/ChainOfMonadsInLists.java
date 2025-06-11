@@ -1,4 +1,4 @@
-package org.example.monads;
+package org.example.monads.vavr;
 
 import io.vavr.collection.List;
 import io.vavr.control.Either;
