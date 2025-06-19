@@ -8,12 +8,17 @@ import org.junit.jupiter.api.Assertions;
 public class FullChainTest {
 
     @Test
-    public void test01() {
+    public void TestThatNeedToBeFixed() {
         RequestProcessor processor = new RequestProcessor();
         Request request = new Request("John Doe", "admin", "secret data");
         var result = processor.processRequest(request);
         // You might want to add assertions here
          Assertions.assertNotNull(result);
+
+         //something missing :(
          Assertions.assertEquals("originator: Ok, authorization: Ok, validation: Ok, logic: Ok", result);
+         // we can fix it
+        // but
+        // too bad that the compiler doesn't prevent us for such errrors
     }
 }

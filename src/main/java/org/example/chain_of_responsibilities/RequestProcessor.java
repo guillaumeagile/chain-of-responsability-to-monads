@@ -5,17 +5,17 @@ public class RequestProcessor {
 
     public RequestProcessor() {
         // Create handlers
-        RequestHandler authHandler = new AuthenticationHandler();
-        RequestHandler authzHandler = new AuthorizationHandler();
+        RequestHandler authenticationHandler = new AuthenticationHandler();
+        RequestHandler authorizationHandler = new AuthorizationHandler();
         RequestHandler validationHandler = new DataValidationHandler();
         RequestHandler logicHandler = new BusinessLogicHandler();
 
         // Set up the chain
-        authHandler.setNext(authzHandler);
-        authzHandler.setNext(validationHandler);
+        authenticationHandler.setNext(authorizationHandler);
+        authorizationHandler.setNext(validationHandler);
         validationHandler.setNext(logicHandler);
 
-        this.chain = authHandler; // Start of the chain
+        this.chain = authenticationHandler; // Start of the chain
     }
 
     public String processRequest(Request request) {
