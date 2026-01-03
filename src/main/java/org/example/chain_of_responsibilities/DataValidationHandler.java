@@ -5,6 +5,7 @@ public class DataValidationHandler extends BaseRequestHandler {
 
     @Override
     public String handleRequest(Request request) {
-        return ", validation: Ok";
+        // HINT the problem is here!
+        return ", validation: Ok" ;
     }
 }

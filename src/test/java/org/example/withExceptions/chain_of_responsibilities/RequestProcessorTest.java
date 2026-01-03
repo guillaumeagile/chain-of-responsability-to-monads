@@ -4,7 +4,7 @@ import org.example.chain_of_responsibilities.Request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 class RequestProcessorTest {
     private RequestProcessor processor;
@@ -23,8 +23,9 @@ class RequestProcessorTest {
         String result = processor.processRequest(validRequest);
 
         // Then the request should be processed successfully
-        assertTrue(result.contains("originator: Ok"));
-        assertTrue(result.contains("authorization: Ok"));
+        assertThat(result)
+            .contains("originator: Ok")
+            .contains("authorization: Ok");
     }
 
     @Test
@@ -36,7 +37,7 @@ class RequestProcessorTest {
         String result = processor.processRequest(invalidRequest);
 
         // Then an authentication error message should be returned
-        assertEquals("AUTHENTICATION error", result);
+        assertThat(result).isEqualTo("AUTHENTICATION error");
     }
 
     @Test
@@ -48,7 +49,7 @@ class RequestProcessorTest {
         String result = processor.processRequest(invalidRequest);
 
         // Then an authorization error message should be returned
-        assertEquals("AUTHORIZATION error", result);
+        assertThat(result).isEqualTo("AUTHORIZATION error");
     }
 
 }

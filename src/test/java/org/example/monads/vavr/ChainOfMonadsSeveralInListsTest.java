@@ -5,7 +5,9 @@ import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
 import org.example.monads.vavr.ProcessingError.ErrorType;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.vavr.api.VavrAssertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class ChainOfMonadsSeveralInListsTest {
 
@@ -22,24 +24,19 @@ public class ChainOfMonadsSeveralInListsTest {
         
         List<Either<ProcessingError, String>> results = chainOfMonads.processChain(requests);
         
-        // Should have 4 results
-        Assertions.assertEquals(4, results.size());
+        assertThat(results).hasSize(4);
         
-        // First request should succeed
-        Assertions.assertTrue(results.get(0).isRight());
-        Assertions.assertEquals("Finally: Successfully processed request for: John", results.get(0).get());
+        assertThat(results.get(0)).isRight();
+        assertThat(results.get(0).get()).isEqualTo("Finally: Successfully processed request for: John");
         
-        // Second request should fail with authentication error
-        Assertions.assertTrue(results.get(1).isLeft());
-        Assertions.assertEquals(ErrorType.AUTHENTICATION, results.get(1).getLeft().type());
+        assertThat(results.get(1)).isLeft();
+        assertThat(results.get(1).getLeft().type()).isEqualTo(ErrorType.AUTHENTICATION);
         
-        // Third request should fail with authorization error
-        Assertions.assertTrue(results.get(2).isLeft());
-        Assertions.assertEquals(ErrorType.AUTHORIZATION, results.get(2).getLeft().type());
+        assertThat(results.get(2)).isLeft();
+        assertThat(results.get(2).getLeft().type()).isEqualTo(ErrorType.AUTHORIZATION);
         
-        // Fourth request should fail with business logic error
-        Assertions.assertTrue(results.get(3).isLeft());
-        Assertions.assertEquals(ErrorType.BUSINESS_LOGIC, results.get(3).getLeft().type());
+        assertThat(results.get(3)).isLeft();
+        assertThat(results.get(3).getLeft().type()).isEqualTo(ErrorType.BUSINESS_LOGIC);
     }
     
     @Test
@@ -55,10 +52,12 @@ public class ChainOfMonadsSeveralInListsTest {
         
         List<String> successfulResults = chainOfMonads.processAndGetSuccessful(requests);
         
-        // Should have 2 successful results
-        Assertions.assertEquals(2, successfulResults.size());
-        Assertions.assertEquals("Finally: Successfully processed request for: John", successfulResults.get(0));
-        Assertions.assertEquals("Finally: Successfully processed request for: Alice", successfulResults.get(1));
+        assertThat(successfulResults)
+            .hasSize(2)
+            .containsExactly(
+                "Finally: Successfully processed request for: John",
+                "Finally: Successfully processed request for: Alice"
+            );
     }
     
     @Test
@@ -74,11 +73,14 @@ public class ChainOfMonadsSeveralInListsTest {
         
         List<ProcessingError> errors = chainOfMonads.processAndGetErrors(requests);
         
-        // Should have 3 errors
-        Assertions.assertEquals(3, errors.size());
-        Assertions.assertEquals(ErrorType.AUTHENTICATION, errors.get(0).type());
-        Assertions.assertEquals(ErrorType.AUTHORIZATION, errors.get(1).type());
-        Assertions.assertEquals(ErrorType.BUSINESS_LOGIC, errors.get(2).type());
+        assertThat(errors)
+            .hasSize(3)
+            .extracting(ProcessingError::type)
+            .containsExactly(
+                ErrorType.AUTHENTICATION,
+                ErrorType.AUTHORIZATION,
+                ErrorType.BUSINESS_LOGIC
+            );
     }
     
     @Test
@@ -93,10 +95,10 @@ public class ChainOfMonadsSeveralInListsTest {
         
         List<Request> validRequests = chainOfMonads.validateRequests(requests);
         
-        // Should have 2 valid requests
-        Assertions.assertEquals(2, validRequests.size());
-        Assertions.assertEquals("John", validRequests.get(0).originator());
-        Assertions.assertEquals("Bob", validRequests.get(1).originator());
+        assertThat(validRequests)
+            .hasSize(2)
+            .extracting(Request::originator)
+            .containsExactly("John", "Bob");
     }
     
     @Test
@@ -112,9 +114,9 @@ public class ChainOfMonadsSeveralInListsTest {
         
         List<Request> authenticatedRequests = chainOfMonads.authenticateRequests(requests);
         
-        // Should have 2 authenticated requests (passed both validation and authentication)
-        Assertions.assertEquals(2, authenticatedRequests.size());
-        Assertions.assertEquals("John", authenticatedRequests.get(0).originator());
-        Assertions.assertEquals("Bob", authenticatedRequests.get(1).originator());
+        assertThat(authenticatedRequests)
+            .hasSize(2)
+            .extracting(Request::originator)
+            .containsExactly("John", "Bob");
     }
 }

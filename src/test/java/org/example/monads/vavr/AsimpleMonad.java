@@ -1,8 +1,10 @@
 package org.example.monads.vavr;
 
 import org.example.chain_of_responsibilities.Request;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.vavr.api.VavrAssertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class AsimpleMonad
 {
@@ -10,20 +12,16 @@ public class AsimpleMonad
     public void Right() {
 
          var sut = ChainOfMonads.validateRequest(new Request("John Doe", "admin", "secret data"));
-         Assertions.assertTrue(sut.isRight());
-         Assertions.assertEquals("secret data", sut.get().data());
+         assertThat(sut).isRight();
+         assertThat(sut.get().data()).isEqualTo("secret data");
     }
 
     @Test
     public void Left() {
 
         var sut = ChainOfMonads.validateRequest(new Request("John Doe", "admin", ""));
-        Assertions.assertTrue(sut.isLeft());
-       // Assertions.assertEquals("what data???", sut.get().data());  // CANNOT GET DATA on Left
-
-        Assertions.assertEquals( ProcessingError.class, sut.getLeft().getClass());
-
-        Assertions.assertEquals(ProcessingError.ErrorType.VALIDATION, sut.getLeft().type());
-        Assertions.assertEquals("Data is empty", sut.getLeft().message());
+        assertThat(sut).isLeft();
+        assertThat(sut.getLeft().type()).isEqualTo(ProcessingError.ErrorType.VALIDATION);
+        assertThat(sut.getLeft().message()).isEqualTo("Data is empty");
     }
 }

@@ -4,7 +4,9 @@ import io.vavr.control.Either;
 import org.example.chain_of_responsibilities.Request;
 import org.example.monads.vavr.ProcessingError.ErrorType;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+
+import static org.assertj.vavr.api.VavrAssertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class ChainOfMonadsOneRequestTest {
 
@@ -15,8 +17,8 @@ public class ChainOfMonadsOneRequestTest {
         
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
-        Assertions.assertTrue(result.isRight());
-        Assertions.assertEquals("Finally: Successfully processed request for: John Doe", result.get());
+        assertThat(result).isRight();
+        assertThat(result.get()).isEqualTo("Finally: Successfully processed request for: John Doe");
     }
     
     @Test
@@ -26,9 +28,9 @@ public class ChainOfMonadsOneRequestTest {
         
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
-        Assertions.assertTrue(result.isLeft());
-        Assertions.assertEquals(ErrorType.VALIDATION, result.getLeft().type());
-        Assertions.assertEquals("Data is empty", result.getLeft().message());
+        assertThat(result).isLeft();
+        assertThat(result.getLeft().type()).isEqualTo(ErrorType.VALIDATION);
+        assertThat(result.getLeft().message()).isEqualTo("Data is empty");
     }
     
     @Test
@@ -38,9 +40,9 @@ public class ChainOfMonadsOneRequestTest {
         
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
-        Assertions.assertTrue(result.isLeft());
-        Assertions.assertEquals(ErrorType.AUTHENTICATION, result.getLeft().type());
-        Assertions.assertEquals("Originator is empty", result.getLeft().message());
+        assertThat(result).isLeft();
+        assertThat(result.getLeft().type()).isEqualTo(ErrorType.AUTHENTICATION);
+        assertThat(result.getLeft().message()).isEqualTo("Originator is empty");
     }
     
     @Test
@@ -50,9 +52,9 @@ public class ChainOfMonadsOneRequestTest {
         
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
-        Assertions.assertTrue(result.isLeft());
-        Assertions.assertEquals(ErrorType.AUTHORIZATION, result.getLeft().type());
-        Assertions.assertEquals("User does not have admin role", result.getLeft().message());
+        assertThat(result).isLeft();
+        assertThat(result.getLeft().type()).isEqualTo(ErrorType.AUTHORIZATION);
+        assertThat(result.getLeft().message()).isEqualTo("User does not have admin role");
     }
     
     @Test
@@ -62,9 +64,9 @@ public class ChainOfMonadsOneRequestTest {
         
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
         
-        Assertions.assertTrue(result.isLeft());
-        Assertions.assertEquals(ErrorType.BUSINESS_LOGIC, result.getLeft().type());
-        Assertions.assertEquals("Error processing data", result.getLeft().message());
+        assertThat(result).isLeft();
+        assertThat(result.getLeft().type()).isEqualTo(ErrorType.BUSINESS_LOGIC);
+        assertThat(result.getLeft().message()).isEqualTo("Error processing data");
     }
 
     @Test
@@ -74,8 +76,8 @@ public class ChainOfMonadsOneRequestTest {
 
         Either<ProcessingError, String> result = chainOfMonads.processChain(request);
 
-        Assertions.assertTrue(result.isLeft());
-        Assertions.assertEquals(ErrorType.AUTHORIZATION, result.getLeft().type());
-        Assertions.assertEquals("User does not have admin role", result.getLeft().message());
+        assertThat(result).isLeft();
+        assertThat(result.getLeft().type()).isEqualTo(ErrorType.AUTHORIZATION);
+        assertThat(result.getLeft().message()).isEqualTo("User does not have admin role");
     }
 }
